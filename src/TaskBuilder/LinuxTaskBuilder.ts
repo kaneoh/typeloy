@@ -37,7 +37,8 @@ import {
   RestartTask,
   StopTask,
   StartTask,
-  UploadTask
+  UploadTask,
+  DocumentConverterSetupTask
 } from "../tasks";
 
 
@@ -76,10 +77,17 @@ class SetupTaskListBuilder {
         defs["certbotRenew"] = new CertbotRenewTask(config, certbotConfig.domain, certbotConfig.email);
       }
     }
+    if (siteConfig.env &&
+      siteConfig.env['CONVERT_SERVICE_URL'] == 'http://localhost:3488/unoconv/pdf' &&
+      siteConfig.env && siteConfig.env['CONVERT_SERVICE_GITHUB_TOKEN']
+    ) {
+      defs["documentConverterSetup"] = new DocumentConverterSetupTask(config, siteConfig.env['CONVERT_SERVICE_GITHUB_TOKEN'] as string);
+    }
     return defs;
   }
 
   public buildDefaultTasks(config : Config, definitions) {
+    const siteConfig = this.builder.getSiteConfig();
     const tasks : Array<Task> = [];
     tasks.push(definitions.updatePackages);
 
@@ -103,6 +111,13 @@ class SetupTaskListBuilder {
       tasks.push(definitions.studSetup);
       tasks.push(definitions.studTest);
       tasks.push(definitions.studRestart);
+    }
+
+    if (siteConfig.env &&
+      siteConfig.env['CONVERT_SERVICE_URL'] == 'http://localhost:3488/unoconv/pdf' &&
+      siteConfig.env && siteConfig.env['CONVERT_SERVICE_GITHUB_TOKEN']
+    ) {
+      tasks.push(definitions.documentConverterSetup);
     }
     return tasks;
   }

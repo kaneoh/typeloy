@@ -25,3 +25,4 @@ export * from "./tasks/RestartTask";
 export * from "./tasks/StopTask";
 export * from "./tasks/StartTask";
 export * from "./tasks/LogsTask";
+export * from "./tasks/DocumentConverterSetupTask";
