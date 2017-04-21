@@ -8,7 +8,7 @@ LOG_OPTIONS="-n${LOG_LINES} <%= logOptions %>"
 
 . $DEPLOY_PREFIX/lib/functions.sh
 
-UPSTART_LOG="/var/log/upstart/${APP_NAME}.log"
+UPSTART_LOG="/var/log/${APP_NAME}.log"
 
 if [[ -e /bin/journalctl ]] ; then
     sudo /bin/journalctl $LOG_OPTIONS --no-pager -u $APP_NAME.service
