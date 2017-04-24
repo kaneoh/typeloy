@@ -55,6 +55,14 @@ export class MeteorBuilder extends EventEmitter {
       });
     }
 
+    const typingsConfig = pathResolve(appPath,"typings.json");
+
+    if (fs.existsSync(typingsConfig)) {
+      buildFinish = buildFinish.then((code : number) => {
+        return this.normalCommand(appPath, "typings", ["install"]);
+      });
+    }
+
     buildFinish = buildFinish.then((code : number) => {
       return this.buildMeteorApp(appPath, meteorBinary, buildLocation);
     });
@@ -134,6 +142,39 @@ export class MeteorBuilder extends EventEmitter {
     }
 
     this.log(`Running meteor command: ${executable} ${args.join(' ')}`);
+    return new Promise<number>( (resolve, reject) => {
+      let meteor = spawn(executable, args, options);
+      let stdout = "";
+      let stderr = "";
+      meteor.stdout.pipe(process.stdout, {end: false});
+      meteor.stderr.pipe(process.stderr, {end: false});
+      meteor.on('close', (code : number) => {
+        if (code != 0) {
+          return reject(code);
+        }
+        resolve(code);
+      });
+    });
+  }
+
+  protected normalCommand(appPath : string, executable : string, args : Array<string>) : Promise<number> {
+    const isWin = /^win/.test(process.platform);
+    if (isWin) {
+      // Sometimes cmd.exe not available in the path
+      // See: http://goo.gl/ADmzoD
+      executable = process.env.comspec || "cmd.exe";
+      args = ["/c"].concat(args);
+    }
+
+    let options = {
+      "cwd": pathResolve(appPath),
+    };
+    options['env'] = process.env;
+    if (this.config.meteor.env) {
+      options['env'] = _.extend(options['env'], this.config.meteor.env);
+    }
+
+    this.log(`Running command: ${executable} ${args.join(' ')}`);
     return new Promise<number>( (resolve, reject) => {
       let meteor = spawn(executable, args, options);
       let stdout = "";
