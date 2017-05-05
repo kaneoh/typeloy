@@ -1,7 +1,6 @@
 FROM node
 RUN npm install -g typescript
 RUN npm install -g typings
-RUN curl https://install.meteor.com/ | sh
 ADD ./bin /opt/typeloy/bin
 ADD ./scripts /opt/typeloy/scripts
 ADD ./src /opt/typeloy/src
@@ -16,8 +15,6 @@ WORKDIR /opt/typeloy
 RUN typings install
 RUN tsc
 RUN npm link
-RUN mkdir /project
-RUN useradd -m BuildAgent
-USER BuildAgent
-WORKDIR /project
+RUN curl https://install.meteor.com/ | sh
+ENV METEOR_ALLOW_SUPERUSER=true
 ENTRYPOINT ["typeloy"]
