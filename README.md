@@ -82,6 +82,11 @@ The difference between **typeloy** and **meteor-up**:
 
     npm install -g typeloy
 
+### Running using docker
+
+    docker build -t kaneoh/typeloy .
+    docker run -it --rm -v {your_meteor_project}:/project kaneoh/typeloy deploy {your_site} 
+
 ### Config File
 
 Typeloy uses its own config but the config format is backward-compatible
