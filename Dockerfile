@@ -1,6 +1,7 @@
 FROM node
 RUN npm install -g typescript
 RUN npm install -g typings
+RUN curl https://install.meteor.com/ | sh
 ADD ./bin /opt/typeloy/bin
 ADD ./scripts /opt/typeloy/scripts
 ADD ./src /opt/typeloy/src
