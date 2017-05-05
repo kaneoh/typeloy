@@ -17,5 +17,7 @@ RUN typings install
 RUN tsc
 RUN npm link
 RUN mkdir /project
+RUN useradd -m BuildAgent
+USER BuildAgent
 WORKDIR /project
 ENTRYPOINT ["typeloy"]
