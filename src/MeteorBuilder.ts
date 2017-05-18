@@ -48,6 +48,9 @@ export class MeteorBuilder extends EventEmitter {
     if (fs.existsSync(npmJsonConfig)) {
       // always rebuild npm modules because the binary format might be different.
       buildFinish = buildFinish.then((code : number) => {
+        return this.meteorCommand(appPath, meteorBinary, ["npm", "prune"]);
+      });
+      buildFinish = buildFinish.then((code : number) => {
         return this.meteorCommand(appPath, meteorBinary, ["npm", "install"]);
       });
       buildFinish = buildFinish.then((code : number) => {
