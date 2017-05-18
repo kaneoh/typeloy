@@ -1,6 +1,6 @@
 import {SetupTask} from "./SetupTask";
 import {Config} from "../config";
-import {Session, SessionResult, executeScript} from "../Session";
+import {Session, SessionResult, executeScript, sync} from "../Session";
 
 export class DocumentConverterSetupTask extends SetupTask {
 
@@ -19,6 +19,9 @@ export class DocumentConverterSetupTask extends SetupTask {
     var vars = this.extendArgs({
         githubToken: this.githubToken,
     });
-    return executeScript(session, this.resolveScript(session, 'document-converter-install.sh'), {vars: vars});
+    return sync(
+      (result : SessionResult) => executeScript(session, this.resolveScript(session, 'docker-install.sh')),
+      (result : SessionResult) => executeScript(session, this.resolveScript(session, 'document-converter-install.sh'), {vars: vars})
+    );
   }
 }
