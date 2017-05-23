@@ -26,3 +26,4 @@ export * from "./tasks/StopTask";
 export * from "./tasks/StartTask";
 export * from "./tasks/LogsTask";
 export * from "./tasks/DocumentConverterSetupTask";
+export * from "./tasks/PdfExportSetupTask";

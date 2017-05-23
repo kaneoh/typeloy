@@ -38,7 +38,8 @@ import {
   StopTask,
   StartTask,
   UploadTask,
-  DocumentConverterSetupTask
+  DocumentConverterSetupTask,
+  PdfExportSetupTask
 } from "../tasks";
 
 
@@ -77,12 +78,22 @@ class SetupTaskListBuilder {
         defs["certbotRenew"] = new CertbotRenewTask(config, certbotConfig.domain, certbotConfig.email);
       }
     }
+
     if (siteConfig.env &&
-      siteConfig.env['CONVERT_SERVICE_URL'] == 'http://localhost:3488/unoconv/pdf' &&
-      siteConfig.env && siteConfig.env['CONVERT_SERVICE_GITHUB_TOKEN']
+      (siteConfig.env['CONVERT_SERVICE_URL'] || "").indexOf('http://localhost:3488/unoconv/pdf') === 0 &&
+      siteConfig.env && siteConfig.env['SERVICE_GITHUB_TOKEN']
     ) {
-      defs["documentConverterSetup"] = new DocumentConverterSetupTask(config, siteConfig.env['CONVERT_SERVICE_GITHUB_TOKEN'] as string);
+      defs["documentConverterSetup"] = new DocumentConverterSetupTask(config, siteConfig.env['SERVICE_GITHUB_TOKEN'] as string);
     }
+
+    if (siteConfig.env &&
+      (siteConfig.env['PDF_EXPORT_SERVICE_URL'] || "").indexOf('http://localhost:3000') === 0 &&
+      siteConfig.env && siteConfig.env['SERVICE_GITHUB_TOKEN']
+    ) {
+      console.log()
+      defs["pdfExportSetupTask"] = new PdfExportSetupTask(config, siteConfig.env['SERVICE_GITHUB_TOKEN'] as string);
+    }
+
     return defs;
   }
 
@@ -115,10 +126,18 @@ class SetupTaskListBuilder {
 
     if (siteConfig.env &&
       siteConfig.env['CONVERT_SERVICE_URL'] == 'http://localhost:3488/unoconv/pdf' &&
-      siteConfig.env && siteConfig.env['CONVERT_SERVICE_GITHUB_TOKEN']
+      siteConfig.env && siteConfig.env['SERVICE_GITHUB_TOKEN']
     ) {
       tasks.push(definitions.documentConverterSetup);
     }
+
+    if (siteConfig.env &&
+      siteConfig.env['PDF_EXPORT_SERVICE_URL'] == 'http://localhost:3000' &&
+      siteConfig.env && siteConfig.env['SERVICE_GITHUB_TOKEN']
+    ) {
+      tasks.push(definitions.pdfExportSetupTask);
+    }
+
     return tasks;
   }
 

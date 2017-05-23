@@ -16,3 +16,4 @@ fi
 
 sudo yum install -y docker-io docker-devel docker-pkg-devel
 sudo service docker start
+sudo docker restart $(sudo docker ps -a -q)
