@@ -62,6 +62,9 @@ export class MeteorBuilder extends EventEmitter {
 
     if (fs.existsSync(typingsConfig)) {
       buildFinish = buildFinish.then((code : number) => {
+        return this.normalCommand(appPath, "typings", ["prune"]);
+      });
+      buildFinish = buildFinish.then((code : number) => {
         return this.normalCommand(appPath, "typings", ["install"]);
       });
     }
