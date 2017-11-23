@@ -4,4 +4,6 @@ DEPLOY_PREFIX="<%= deployPrefix %>"
 set -e
 # make sure the epel repo is enabled.
 sudo sed -i -e 's/enabled=0/enabled=1/' /etc/yum.repos.d/epel.repo
+sudo yum remove -y libstdc++-devel
 sudo yum install -y libev libev-devel openssl openssl-devel git gcc make > /dev/null
+sudo yum update -y

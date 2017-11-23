@@ -10,7 +10,12 @@ echo "Cloning stud git repository..."
 sudo git clone https://github.com/bumptech/stud.git stud
 
 # special patch for centos
+if [[ -d /usr/include/libev ]] ; then
+
 sudo cp -v /usr/include/libev/ev.h /usr/include
+
+fi
+
 
 echo "Compiling..."
 (cd stud && sudo make install)

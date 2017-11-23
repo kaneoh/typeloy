@@ -27,7 +27,7 @@ service_stop $APP_NAME
 
 unset PYTHON_INSTALL_LAYOUT
 ./certbot-auto certonly --standalone \
-    --verbose \
+    --debug --verbose \
     --non-interactive --text \
     --agree-tos \
     --keep-until-expiring \
